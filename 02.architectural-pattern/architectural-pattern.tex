@@ -1,0 +1,140 @@
+\setuppapersize[A4]
+\setupheadtext[content=Daftar Isi]
+\setuppagenumbering[location=]
+% setup PDF outline
+\setupinteraction[state=start,color=,contrastcolor=]
+\placebookmarks[chapter,section,subsection][chapter,section,subsection]
+\setupinteractionscreen[option=bookmark]
+\setuplabeltext[en][figure=Figur ]
+\setupmarginrule[rulethickness=1pt]
+\define[1]\Callout{
+  \startmarginrule
+  #1
+  \stopmarginrule
+}
+\define[1]\InlineCode{%
+\switchtobodyfont[dejavu,9pt]%
+\ss\mono#1\rm%
+\switchtobodyfont[modern,12pt]%
+}
+
+\starttext
+
+\setuppagenumber[state=stop]
+\title{Perbandingan Pola Arsitektur \sl Monolithic \tf dan \sl Microservices \tf untuk \sl Server \tf Aplikasi Berbasis \sl Web \tf}
+\blank[16cm]
+\it Dirancang Oleh \\
+\bf Lie, Steven Staria Nugraha \\
+\tf A11.2022.14433 \\
+\rm
+
+\startsetups[cover:footer] % TODO: learn `\startsetups`
+\setupinterlinespace[line=1mm]
+\startembeddedxtable[option=stretch,offset=5pt,align={lohi,center},bodyfont={helvetica,9pt}]
+\startxrow
+  \startxcell[option=fixed,ny=3] \externalfigure[logo-udinus.png][width=1.7cm] \stopxcell
+  \startxcell[ny=3,align={lohi,right}] \switchtobodyfont[times,11pt] Jurusan Teknik Informatika \\ Fakultas Ilmu Komputer \\ Universitas Dian Nuswantoro \\ Semarang \stopxcell
+  \startxcell[nx=2]\bf Tugas Mata Kuliah \stopxcell
+\stopxrow
+\startxrow
+  \startxcell[nx=2]\bs Pemrograman Sisi Server \stopxcell
+\stopxrow
+\startxrow
+  \startxcell\bf Kelompok Kelas \stopxcell
+  \startxcell\bs A11.4704 \stopxcell
+\stopxrow
+\stopembeddedxtable
+\stopsetups
+\setupfootertexts[\setup{cover:footer}]
+\setupheadertexts[Tugas Artikel \it Architectural Pattern \tf di Aplikasi Web][]
+
+\page
+\setupfootertexts[]
+\setupheadertexts[]
+
+\completecontent
+
+\page
+\setuppagenumber[state=start]
+\setupfootertexts[\tfx{\getmarking[chapter]}][\pagenumber]
+\setupwhitespace[line]
+
+\chapter{Latar Belakang}
+\startcolumns[distance=1cm]
+
+Dalam era digital saat ini, pemanfaatan teknologi informasi telah menjadi kebutuhan esensial bagi banyak organisasi dan individu.
+Salah satu komponen kunci dari infrastruktur TI modern adalah pola arsitektur server berbasis \sl web \tf.
+Arsitektur merujuk pada \bf struktur \tf yang digunakan untuk mendesain dan mengembangkan aplikasi \sl web \tf, yang menghubungkan pengguna dengan server melalui internet.
+
+Sejak diluncurkannya \bs World Wide Web \tf pada awal 1990-an, perkembangan teknologi \sl web \tf telah mengalami evolusi yang pesat.
+Awalnya, aplikasi \sl web \tf bersifat statis dan sederhana, tetapi seiring dengan kemajuan teknologi, aplikasi web kini menjadi lebih dinamis dan interaktif.
+Ini menciptakan kebutuhan untuk pola arsitektur yang dapat mendukung kompleksitas dan skala yang lebih besar.
+
+
+\stopcolumns
+
+\section{Skalabilitas dan Ketersediaan}
+Organisasi yang mengandalkan aplikasi \sl web \tf memerlukan infrastruktur yang mampu \bf menangani lonjakan pengguna \tf dan \bf memastikan ketersediaan layanan yang tinggi\tf.
+Oleh karena itu, pola arsitektur server berbasis web harus dirancang dengan mempertimbangkan \bf skalabilitas horizontal \tf \sl (menambah lebih banyak server) \tf dan \bf vertikal \tf \sl (meningkatkan kapasitas server) \tf serta menghindari \bs downtime \tf atau waktu henti.
+
+\section{Keamanan Data}
+Dengan meningkatnya ancaman siber, aspek keamanan dalam arsitektur server berbasis web menjadi sangat penting.
+Data pengguna yang sensitif harus dilindungi melalui \bf enkripsi \tf, \bs autentikasi \tf yang kuat, dan praktik keamanan lainnya.
+Selain itu, manajemen data yang efisien, termasuk penggunaan database terdistribusi dan \bs caching \tf, menjadi krusial untuk performa aplikasi.
+
+\chapter{Perbandingan Pola Arsitektur}
+
+\section{\sl Monolithic \tf}
+\startcolumns
+Arsitektur monolithic adalah pendekatan tradisional di mana \bs seluruh aplikasi dibangun sebagai satu kesatuan\tf. Semua komponen aplikasi, seperti \sl server \tf atau peladen pengguna, \sl API \tf, dan akses data seperti \sl database \tf, diintegrasikan dalam satu tempat.
+
+Pada dasarnya kesatuan tempat aplikasi merupakan penggunaan \bf proses atau program yang sama \tf. Sehingga \bs codebase \tf yang digunakan bersifat tunggal.
+\column
+\placefigure
+  [here]
+  [fig:monolithic]
+  {Representasi \sl monolith \tf nyata}
+  {\externalfigure[Utah_Desert_Monolith_Compressed.jpg][width=5cm]}
+\stopcolumns
+
+\Callout{
+Kata \sl monolith \tf sendiri berasal dari bahasa Yunani, yaitu gabungan dari dua kata:
+\bi "monos" (\agr\switchtobodyfont[gentium]μόνος\switchtobodyfont[modern]\en) \tf yang berarti satu atau tunggal dan
+\bi "lithos" (\agr\switchtobodyfont[gentium]λίθο\switchtobodyfont[modern]\en) \tf yang berarti batu
+}
+
+\subsection{Ciri-ciri Arsitektur \sl Monolithic \tf}
+\startitemize[a]
+\item \bf Skala Kecil. \tf
+Cocok untuk \bf aplikasi kecil \tf yang tidak membutuhkan \bs modularitas \tf tinggi.
+Namun dari sisi \bf skalabilitas \tf (khususnya \bf horizontal\tf), sebuah arsitektur \sl monolithic \tf tidak ideal untuk digunakan.
+\item \bf Monolingual. \tf
+\sl Codebase \tf menggunakan \bf satu bahasa pemrograman\tf.
+Komunikasi dapat dilakukan antar fungsi tanpa menggunakan protokol antar proses.
+\item \bs Database \bf Tetap Terpisah. \tf
+Sebagian besar implementasi \sl database \tf berjalan dalam proses yang berbeda yang tidak dapat disatukan.
+Hal ini juga melanggar ciri monolingual karena pada umumnya sebuah \sl database \tf memiliki standar bahasa tersendiri.
+\stopitemize
+
+\section{\sl Microservices\tf}
+\sl Microservices \tf adalah pendekatan yang \bf memecah aplikasi menjadi layanan-layanan kecil yang independen\tf.
+Masing-masing layanan dapat didirikan pada mesin dan lokasi yang berbeda.
+Setiap layanan menjalankan satu fungsi tertentu dan bisa dikembangkan, diuji, serta dipelihara secara terpisah.
+
+\subsection{Ciri-ciri Arsitektur \sl Microservices\tf}
+\startitemize[a]
+\item \bf Bersifat \bs Desentral\bf. \tf Tidak terdapat peladen pusat yang menangani semua aliran jaringan.
+Bobot dapat dipisah secara strategis (\bs load balancing\tf) ke beberapa proses atau mesin yang berbeda.
+Hal ini dapat menjaga \bs stabilitas \tf dan sekaligus juga memungkinkan \bs skalabilitas \tf horizontal yang baik.
+\placefigure
+[here]
+[fig:decentralized]
+{Visualisasi perbedaan jaringan tercetnral (\sl centralized \tf) dan desentral(\sl decentralized \tf)}
+{\externalfigure[Decentralized_Diagram.svg][width=7cm]}
+Setiap layanan harus menjaga keamanan dengan mengimplementasikan berbagai metode pelindungan seperti \bs autentikasi \tf \emdash\ memastikan keaslian, \bf otorisasi \tf \emdash\ penyesuaian izin dan \bf enkripsi \tf \emdash\ merahasiakan informasi sensitif, antara lain.
+\item \bf Komunikasi melalui \bs API\bf. \tf Layanan-layanan berkomunikasi melalui \bs API \tf atau protokol komunikasi ringan seperti protokol \InlineCode{REST}, \InlineCode{GraphQL}, \InlineCode{GRPC} atau \InlineCode{TRPC} di antara lain.
+\item \bf Multi-lingual. \tf
+Setiap \sl microservice \tf dapat menggunakan bahasa pemrograman tersendiri. Komunikasi antar servis dilakukan melalui protokol yang bersifat agnostik terhadap implementasi bahasa pemrograman yang dipakai.
+\stopitemize
+
+\stoptext
